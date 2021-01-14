@@ -1,0 +1,85 @@
+import com.github.triplet.gradle.androidpublisher.*
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.github.triplet.play'
+}
+play {
+    // Gradle Play Publisher
+    // https://github.com/Triple-T/gradle-play-publisher
+    track.set("alpha")
+    releaseStatus.set(ReleaseStatus.DRAFT)
+    serviceAccountCredentials = file("../myserviceaccount.json")
+    resolutionStrategy.set(ResolutionStrategy.AUTO)
+    releaseName.set("Jenkins")
+//        artifactDir = file("path/to/apk-or-app-bundle/dir")
+//        ./gradlew uploadProReleasePrivateBundle --artifact-dir path/to/app-bundle/dir
+
+}
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "es.algoritmo.githubactions"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 3
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    flavorDimensions "mydimension"
+    productFlavors {
+        demo {
+            // Assigns this product flavor to the "version" flavor dimension.
+            // If you are using only one dimension, this property is optional,
+            // and the plugin automatically assigns all the module's flavors to
+            // that dimension.
+            dimension "mydimension"
+            applicationIdSuffix ".demo"
+            versionNameSuffix "-demo"
+        }
+        dev {
+            dimension "mydimension"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+        pre {
+            dimension "mydimension"
+            applicationIdSuffix ".pre"
+            versionNameSuffix "-pre"
+        }
+        pro {
+            dimension "mydimension"
+        }
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
